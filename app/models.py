@@ -12,8 +12,6 @@ class Organization(Base):
     name = Column(String(255), nullable=False, unique=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
     employees = relationship("Employee", back_populates="organization")
     column_configs = relationship("OrganizationColumnConfig", back_populates="organization")
 
@@ -33,8 +31,6 @@ class Employee(Base):
     organization_id = Column(Integer, ForeignKey("organizations.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
     organization = relationship("Organization", back_populates="employees")
 
 class OrganizationColumnConfig(Base):
@@ -47,6 +43,4 @@ class OrganizationColumnConfig(Base):
     is_visible = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
     organization = relationship("Organization", back_populates="column_configs") 

@@ -33,7 +33,6 @@ class EmployeeService:
         Search employees with advanced filtering and pagination.
         Optimized for millions of records with proper indexing.
         """
-        # Start with base query
         query = db.query(Employee).filter(Employee.organization_id == search_request.organization_id)
         
         # Apply search filter
@@ -49,7 +48,6 @@ class EmployeeService:
         
         # Apply status filter
         if search_request.status:
-            # Convert enum values to strings for database comparison
             status_values = [status.value for status in search_request.status]
             query = query.filter(Employee.status.in_(status_values))
         elif not search_request.include_terminated:

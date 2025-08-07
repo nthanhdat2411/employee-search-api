@@ -40,10 +40,10 @@ class EmployeeSearchCLI:
     def health_check(self) -> None:
         """Check API health"""
         result = self._make_request("GET", "/health")
-        print("✅ API Health Check:")
-        print(f"   Status: {result.get('status')}")
-        print(f"   Service: {result.get('service')}")
-        print(f"   Version: {result.get('version')}")
+        print("API Health Check:")
+        print(f"Status: {result.get('status')}")
+        print(f"Service: {result.get('service')}")
+        print(f"Version: {result.get('version')}")
     
     def search_employees(self, organization_id: int, **kwargs) -> None:
         """Search employees"""
@@ -71,10 +71,10 @@ class EmployeeSearchCLI:
         
         result = self._make_request("POST", "/api/v1/employees/search", search_data)
         
-        print(f"🔍 Employee Search Results:")
-        print(f"   Total: {result.get('total')}")
-        print(f"   Page: {result.get('page')}/{result.get('total_pages')}")
-        print(f"   Page Size: {result.get('page_size')}")
+        print(f"Employee Search Results:")
+        print(f"Total: {result.get('total')}")
+        print(f"Page: {result.get('page')}/{result.get('total_pages')}")
+        print(f"Page Size: {result.get('page_size')}")
         print()
         
         employees = result.get("employees", [])
@@ -83,34 +83,34 @@ class EmployeeSearchCLI:
             return
         
         for i, employee in enumerate(employees, 1):
-            print(f"   {i}. {employee.get('first_name')} {employee.get('last_name')}")
-            print(f"      Email: {employee.get('email')}")
-            print(f"      Department: {employee.get('department') or 'N/A'}")
-            print(f"      Position: {employee.get('position') or 'N/A'}")
-            print(f"      Location: {employee.get('location') or 'N/A'}")
-            print(f"      Status: {employee.get('status')}")
+            print(f"{i}. {employee.get('first_name')} {employee.get('last_name')}")
+            print(f"Email: {employee.get('email')}")
+            print(f"Department: {employee.get('department') or 'N/A'}")
+            print(f"Position: {employee.get('position') or 'N/A'}")
+            print(f"Location: {employee.get('location') or 'N/A'}")
+            print(f"Status: {employee.get('status')}")
             print()
     
     def get_available_filters(self, organization_id: int) -> None:
         """Get available filter options"""
         result = self._make_request("GET", f"/api/v1/organizations/{organization_id}/filters")
         
-        print(f"🔧 Available Filters for Organization {organization_id}:")
+        print(f"Available Filters for Organization {organization_id}:")
         filters = result.get("filters", {})
         
         for filter_type, values in filters.items():
-            print(f"   {filter_type.title()}: {', '.join(values) if values else 'None'}")
+            print(f"{filter_type.title()}: {', '.join(values) if values else 'None'}")
     
     def get_rate_limit_info(self) -> None:
         """Get rate limit information"""
         result = self._make_request("GET", "/api/v1/rate-limit/info")
         
-        print("⏱️  Rate Limit Information:")
-        print(f"   Client ID: {result.get('client_id')}")
+        print("Rate Limit Information:")
+        print(f"Client ID: {result.get('client_id')}")
         rate_limit = result.get("rate_limit", {})
-        print(f"   Remaining: {rate_limit.get('remaining')}")
-        print(f"   Limit: {rate_limit.get('limit')}")
-        print(f"   Reset Time: {rate_limit.get('reset_time')}")
+        print(f"Remaining: {rate_limit.get('remaining')}")
+        print(f"Limit: {rate_limit.get('limit')}")
+        print(f"Reset Time: {rate_limit.get('reset_time')}")
 
 def main():
     """Main CLI entry point"""
@@ -192,10 +192,10 @@ Examples:
             cli.get_rate_limit_info()
     
     except KeyboardInterrupt:
-        print("\n❌ Operation cancelled by user")
+        print("\nOperation cancelled by user")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

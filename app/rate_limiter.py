@@ -37,7 +37,7 @@ class RateLimiter:
         with self.lock:
             self._clean_old_requests(client_key, current_time)
             
-            # Check if we're under the limit
+            # Check if under limit
             if len(self.requests[client_key]) < self.max_requests:
                 self.requests[client_key].append(current_time)
                 return True, {

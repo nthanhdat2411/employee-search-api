@@ -13,7 +13,6 @@ from app.services import EmployeeService, OrganizationService
 from app.rate_limiter import rate_limiter
 from app.models import Employee, Organization, OrganizationColumnConfig
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -36,7 +34,6 @@ app.add_middleware(
 
 def get_client_id(request: Request) -> str:
     """Extract client ID from request headers or IP"""
-    # In production, you might want to use API keys or JWT tokens
     client_id = request.headers.get("X-Client-ID")
     if not client_id:
         client_id = request.client.host
@@ -58,7 +55,6 @@ def rate_limit_dependency(request: Request):
             }
         )
     
-    # Add rate limit headers to response
     request.state.rate_limit_info = rate_limit_info
 
 @app.middleware("http")
@@ -77,7 +73,7 @@ async def add_rate_limit_headers(request: Request, call_next):
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     """Handle favicon requests"""
-    return Response(status_code=204)  # No content response
+    return Response(status_code=204)
 
 @app.get("/", tags=["Health"])
 async def root():
