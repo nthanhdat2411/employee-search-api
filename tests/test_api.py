@@ -98,33 +98,6 @@ class TestHealthEndpoints:
         assert response.status_code == 200
         assert response.json()["status"] == "healthy"
 
-class TestOrganizationEndpoints:
-    """Test organization endpoints"""
-    
-    def test_create_organization(self, client):
-        """Test creating an organization"""
-        org_data = {"name": "Test Organization"}
-        response = client.post("/api/v1/organizations", json=org_data)
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert data["name"] == "Test Organization"
-        assert "id" in data
-    
-    def test_get_organization(self, client, sample_organization):
-        """Test getting an organization"""
-        response = client.get(f"/api/v1/organizations/{sample_organization['id']}")
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert data["id"] == sample_organization["id"]
-        assert data["name"] == sample_organization["name"]
-    
-    def test_get_nonexistent_organization(self, client):
-        """Test getting a non-existent organization"""
-        response = client.get("/api/v1/organizations/999")
-        assert response.status_code == 404
-
 class TestEmployeeSearchEndpoints:
     """Test employee search endpoints"""
     
@@ -159,24 +132,6 @@ class TestEmployeeSearchEndpoints:
         assert "page" in data
         assert "page_size" in data
         assert "total_pages" in data
-
-class TestColumnConfigurationEndpoints:
-    """Test column configuration endpoints"""
-    
-    def test_get_organization_columns(self, client, sample_organization):
-        """Test getting organization column configuration"""
-        response = client.get(f"/api/v1/organizations/{sample_organization['id']}/columns")
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert data["organization_id"] == sample_organization["id"]
-        assert "columns" in data
-        assert len(data["columns"]) > 0
-    
-    def test_get_organization_columns_nonexistent(self, client):
-        """Test getting columns for non-existent organization"""
-        response = client.get("/api/v1/organizations/999/columns")
-        assert response.status_code == 404
 
 class TestFilterEndpoints:
     """Test filter endpoints"""

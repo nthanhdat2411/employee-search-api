@@ -45,15 +45,6 @@ class EmployeeSearchCLI:
         print(f"   Service: {result.get('service')}")
         print(f"   Version: {result.get('version')}")
     
-    def create_organization(self, name: str) -> None:
-        """Create a new organization"""
-        data = {"name": name}
-        result = self._make_request("POST", "/api/v1/organizations", data)
-        print(f"✅ Organization created:")
-        print(f"   ID: {result.get('id')}")
-        print(f"   Name: {result.get('name')}")
-        print(f"   Created: {result.get('created_at')}")
-    
     def search_employees(self, organization_id: int, **kwargs) -> None:
         """Search employees"""
         search_data = {
@@ -100,16 +91,6 @@ class EmployeeSearchCLI:
             print(f"      Status: {employee.get('status')}")
             print()
     
-    def get_organization_columns(self, organization_id: int) -> None:
-        """Get organization column configuration"""
-        result = self._make_request("GET", f"/api/v1/organizations/{organization_id}/columns")
-        
-        print(f"📋 Column Configuration for Organization {organization_id}:")
-        columns = result.get("columns", [])
-        
-        for i, column in enumerate(columns, 1):
-            print(f"   {i}. {column.get('column_name')} (Order: {column.get('display_order')})")
-    
     def get_available_filters(self, organization_id: int) -> None:
         """Get available filter options"""
         result = self._make_request("GET", f"/api/v1/organizations/{organization_id}/filters")
@@ -139,10 +120,8 @@ def main():
         epilog="""
 Examples:
   %(prog)s health
-  %(prog)s create-org "My Company"
   %(prog)s search --org-id 1 --search "john"
   %(prog)s search --org-id 1 --status ACTIVE --departments Engineering
-  %(prog)s columns --org-id 1
   %(prog)s filters --org-id 1
   %(prog)s rate-limit
         """
@@ -159,10 +138,6 @@ Examples:
     # Health check command
     subparsers.add_parser("health", help="Check API health")
     
-    # Create organization command
-    create_org_parser = subparsers.add_parser("create-org", help="Create a new organization")
-    create_org_parser.add_argument("name", help="Organization name")
-    
     # Search employees command
     search_parser = subparsers.add_parser("search", help="Search employees")
     search_parser.add_argument("--org-id", type=int, required=True, help="Organization ID")
@@ -175,10 +150,6 @@ Examples:
     search_parser.add_argument("--page", type=int, default=1, help="Page number")
     search_parser.add_argument("--page-size", type=int, default=50, help="Page size")
     search_parser.add_argument("--include-terminated", action="store_true", help="Include terminated employees")
-    
-    # Get columns command
-    columns_parser = subparsers.add_parser("columns", help="Get organization column configuration")
-    columns_parser.add_argument("--org-id", type=int, required=True, help="Organization ID")
     
     # Get filters command
     filters_parser = subparsers.add_parser("filters", help="Get available filter options")
@@ -200,9 +171,6 @@ Examples:
         if args.command == "health":
             cli.health_check()
         
-        elif args.command == "create-org":
-            cli.create_organization(args.name)
-        
         elif args.command == "search":
             cli.search_employees(
                 organization_id=args.org_id,
@@ -216,9 +184,6 @@ Examples:
                 page_size=args.page_size,
                 include_terminated=args.include_terminated
             )
-        
-        elif args.command == "columns":
-            cli.get_organization_columns(args.org_id)
         
         elif args.command == "filters":
             cli.get_available_filters(args.org_id)

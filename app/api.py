@@ -7,8 +7,7 @@ import logging
 
 from app.database import get_db
 from app.schemas import (
-    EmployeeSearchRequest, EmployeeSearchResponse, EmployeeResponse,
-    OrganizationCreate, OrganizationResponse, ColumnConfigResponse
+    EmployeeSearchRequest, EmployeeSearchResponse, EmployeeResponse
 )
 from app.services import EmployeeService, OrganizationService
 from app.rate_limiter import rate_limiter
@@ -94,34 +93,6 @@ async def health_check():
         "version": "1.0.0"
     }
 
-@app.post("/api/v1/organizations", response_model=OrganizationResponse, tags=["Organizations"])
-async def create_organization(
-    organization: OrganizationCreate,
-    db: Session = Depends(get_db),
-    _: None = Depends(rate_limit_dependency)
-):
-    """Create a new organization"""
-    try:
-        org = OrganizationService.create_organization(db, organization.name)
-        # Setup default column configuration
-        OrganizationService.setup_default_column_config(db, org.id)
-        return org
-    except Exception as e:
-        logger.error(f"Error creating organization: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create organization")
-
-@app.get("/api/v1/organizations/{organization_id}", response_model=OrganizationResponse, tags=["Organizations"])
-async def get_organization(
-    organization_id: int,
-    db: Session = Depends(get_db),
-    _: None = Depends(rate_limit_dependency)
-):
-    """Get organization by ID"""
-    org = OrganizationService.get_organization(db, organization_id)
-    if not org:
-        raise HTTPException(status_code=404, detail="Organization not found")
-    return org
-
 @app.post("/api/v1/employees/search", response_model=EmployeeSearchResponse, tags=["Employees"])
 async def search_employees(
     search_request: EmployeeSearchRequest,
@@ -153,27 +124,6 @@ async def search_employees(
     except Exception as e:
         logger.error(f"Error searching employees: {e}")
         raise HTTPException(status_code=500, detail="Failed to search employees")
-
-@app.get("/api/v1/organizations/{organization_id}/columns", tags=["Columns"])
-async def get_organization_columns(
-    organization_id: int,
-    db: Session = Depends(get_db),
-    _: None = Depends(rate_limit_dependency)
-):
-    """Get column configuration for an organization"""
-    try:
-        # Verify organization exists
-        org = OrganizationService.get_organization(db, organization_id)
-        if not org:
-            raise HTTPException(status_code=404, detail="Organization not found")
-        
-        columns = EmployeeService.get_organization_column_config(db, organization_id)
-        return {"organization_id": organization_id, "columns": columns}
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting column config: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get column configuration")
 
 @app.get("/api/v1/organizations/{organization_id}/filters", tags=["Filters"])
 async def get_available_filters(

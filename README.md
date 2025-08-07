@@ -1,11 +1,10 @@
 # Employee Search Directory API
 
-A high-performance FastAPI microservice for employee search directory with dynamic columns, advanced filtering, and custom rate limiting. Built for handling millions of employees with organization-level data isolation.
+A FastAPI microservice for employee search directory with flexible filtering and custom rate limiting.
 
 ## 🚀 Features
 
 - **Advanced Employee Search**: Full-text search with multiple filter options
-- **Dynamic Columns**: Configurable output columns per organization
 - **Rate Limiting**: Custom implementation without external dependencies
 - **Performance Optimized**: Designed for millions of records
 - **Data Isolation**: Organization-level data separation
@@ -95,21 +94,14 @@ pytest tests/test_api.py
 - `GET /` - Basic health check
 - `GET /health` - Detailed health information
 
-#### 2. Organizations
-- `POST /api/v1/organizations` - Create organization
-- `GET /api/v1/organizations/{id}` - Get organization details
+#### 2. Employee Search
+- `POST /api/v1/employees/search` - Search employees with advanced filtering
 
-#### 3. Employee Search
-- `POST /api/v1/employees/search` - Search employees with filters
-
-#### 4. Column Configuration
-- `GET /api/v1/organizations/{id}/columns` - Get organization column config
-
-#### 5. Available Filters
+#### 3. Filters
 - `GET /api/v1/organizations/{id}/filters` - Get available filter options
 
-#### 6. Rate Limiting
-- `GET /api/v1/rate-limit/info` - Get rate limit information
+#### 4. Rate Limiting
+- `GET /api/v1/rate-limit/info` - Get current rate limit information
 
 ### Search API Usage
 
@@ -277,10 +269,6 @@ docker-compose -f docker-compose.prod.yml up -d
 5. Run the test suite
 6. Submit a pull request
 
-## 📝 License
-
-This project is licensed under the MIT License.
-
 ## 🆘 Support
 
 For issues and questions:
@@ -292,12 +280,6 @@ For issues and questions:
 
 The API uses URL versioning (`/api/v1/`). Future versions will be available at `/api/v2/`, etc.
 
-## 📈 Performance Benchmarks
-
-- **Search Performance**: < 100ms for 1M records
-- **Rate Limiting**: < 1ms overhead per request
-- **Memory Usage**: < 100MB for typical workloads
-- **Concurrent Requests**: 1000+ requests per second
 
 ---
 

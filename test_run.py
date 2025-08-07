@@ -26,22 +26,10 @@ def test_api():
             print(f"❌ Health check failed: {response.status_code}")
             return False
         
-        # Test 2: Create organization
-        print("\n2. Testing organization creation...")
-        org_data = {"name": "Test Organization"}
-        response = requests.post(f"{base_url}/api/v1/organizations", json=org_data)
-        if response.status_code == 200:
-            org = response.json()
-            org_id = org.get('id')
-            print(f"✅ Organization created: {org.get('name')} (ID: {org_id})")
-        else:
-            print(f"❌ Organization creation failed: {response.status_code}")
-            return False
-        
-        # Test 3: Search employees (should be empty initially)
-        print("\n3. Testing employee search...")
+        # Test 2: Search employees (using existing organization ID 1)
+        print("\n2. Testing employee search...")
         search_data = {
-            "organization_id": org_id,
+            "organization_id": 1,
             "page": 1,
             "page_size": 10
         }
@@ -55,23 +43,9 @@ def test_api():
             print(f"❌ Employee search failed: {response.status_code}")
             return False
         
-        # Test 4: Get column configuration
-        print("\n4. Testing column configuration...")
-        response = requests.get(f"{base_url}/api/v1/organizations/{org_id}/columns")
-        if response.status_code == 200:
-            result = response.json()
-            columns = result.get('columns', [])
-            print(f"✅ Column configuration retrieved")
-            print(f"   Number of columns: {len(columns)}")
-            for col in columns[:3]:  # Show first 3 columns
-                print(f"   - {col.get('column_name')}")
-        else:
-            print(f"❌ Column configuration failed: {response.status_code}")
-            return False
-        
-        # Test 5: Get available filters
-        print("\n5. Testing available filters...")
-        response = requests.get(f"{base_url}/api/v1/organizations/{org_id}/filters")
+        # Test 3: Get available filters
+        print("\n3. Testing available filters...")
+        response = requests.get(f"{base_url}/api/v1/organizations/1/filters")
         if response.status_code == 200:
             result = response.json()
             filters = result.get('filters', {})
@@ -82,8 +56,8 @@ def test_api():
             print(f"❌ Available filters failed: {response.status_code}")
             return False
         
-        # Test 6: Rate limiting info
-        print("\n6. Testing rate limiting...")
+        # Test 4: Rate limiting info
+        print("\n4. Testing rate limiting...")
         response = requests.get(f"{base_url}/api/v1/rate-limit/info")
         if response.status_code == 200:
             result = response.json()

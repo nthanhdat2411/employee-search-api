@@ -81,9 +81,6 @@ python cli.py search --org-id 1 --search "john"
 # Get available filters
 python cli.py filters --org-id 1
 
-# Get column configuration
-python cli.py columns --org-id 1
-
 # Check rate limiting
 python cli.py rate-limit
 ```
@@ -92,11 +89,6 @@ python cli.py rate-limit
 ```bash
 # Health check
 curl http://localhost:8000/health
-
-# Create organization
-curl -X POST http://localhost:8000/api/v1/organizations \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Test Company"}'
 
 # Search employees
 curl -X POST http://localhost:8000/api/v1/employees/search \
@@ -108,6 +100,12 @@ curl -X POST http://localhost:8000/api/v1/employees/search \
     "page": 1,
     "page_size": 10
   }'
+
+# Get available filters
+curl http://localhost:8000/api/v1/organizations/1/filters
+
+# Get rate limit info
+curl http://localhost:8000/api/v1/rate-limit/info
 ```
 
 ## 📚 API Documentation
