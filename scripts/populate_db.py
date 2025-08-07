@@ -9,7 +9,6 @@ import os
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-# Add the parent directory to the path so we can import app modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import SessionLocal, create_tables
@@ -32,13 +31,11 @@ def create_sample_data():
             db.add(org)
         db.commit()
         
-        # Refresh to get IDs
         for org in organizations:
             db.refresh(org)
         
         # Sample employees data
         employees_data = [
-            # TechCorp Inc. employees
             {
                 "first_name": "John",
                 "last_name": "Doe",
@@ -88,7 +85,6 @@ def create_sample_data():
                 "organization_id": organizations[0].id
             },
             
-            # Marketing Solutions Ltd. employees
             {
                 "first_name": "Alex",
                 "last_name": "Brown",
@@ -126,7 +122,6 @@ def create_sample_data():
                 "organization_id": organizations[1].id
             },
             
-            # Global Consulting Group employees
             {
                 "first_name": "Lisa",
                 "last_name": "Garcia",
@@ -172,7 +167,7 @@ def create_sample_data():
         
         db.commit()
         
-        print("✅ Sample data created successfully!")
+        print("Sample data created successfully!")
         print(f"   Organizations: {len(organizations)}")
         print(f"   Employees: {len(employees_data)}")
         print()
@@ -181,7 +176,7 @@ def create_sample_data():
             print(f"   {org.id}: {org.name}")
         
     except Exception as e:
-        print(f"❌ Error creating sample data: {e}")
+        print(f"Error creating sample data: {e}")
         db.rollback()
         raise
     finally:
@@ -189,24 +184,22 @@ def create_sample_data():
 
 def main():
     """Main function"""
-    print("🚀 Populating database with sample data...")
+    print("Populating database with sample data...")
     
     try:
-        # Create tables
         create_tables()
-        print("✅ Database tables created")
+        print("Database tables created")
         
-        # Create sample data
         create_sample_data()
         
-        print("\n🎉 Database population completed successfully!")
+        print("\nDatabase population completed successfully!")
         print("\nYou can now test the API with:")
         print("  python cli.py health")
         print("  python cli.py search --org-id 1")
         print("  python cli.py filters --org-id 1")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

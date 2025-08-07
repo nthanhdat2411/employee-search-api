@@ -49,10 +49,12 @@ class EmployeeService:
         
         # Apply status filter
         if search_request.status:
-            query = query.filter(Employee.status.in_(search_request.status))
+            # Convert enum values to strings for database comparison
+            status_values = [status.value for status in search_request.status]
+            query = query.filter(Employee.status.in_(status_values))
         elif not search_request.include_terminated:
             # Exclude terminated by default unless explicitly included
-            query = query.filter(Employee.status != EmployeeStatus.TERMINATED)
+            query = query.filter(Employee.status != EmployeeStatus.TERMINATED.value)
         
         # Apply location filter
         if search_request.locations:
